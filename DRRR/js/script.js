@@ -155,6 +155,7 @@ indexApp.controller("gestisciSingup", function ($scope, $http) {
 // gestisciScreen
 indexApp.controller("gestisciScreen", function ($scope, $http) {
     $scope.message = "Area Screen";
+    $scope.notLogin = false;
 
     var parametri = {
         token: curToken.value,
@@ -168,10 +169,11 @@ indexApp.controller("gestisciScreen", function ($scope, $http) {
         headers: { 'Content-Type': 'application/json' },
         data: parametri
     }).then(function (response) {
-        if (response.data.success) {
+        if (response.data.success)
             $scope.Foto = response.data.post;
-        }
         else
-            alert("Error! " + response.data.message); t
+            alert(response.data.message)
+    }, function (errore) {
+        $scope.notLogin = true;
     });
 });

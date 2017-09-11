@@ -84,7 +84,7 @@ apiRoutes.post('/authenticate', function (req, res) {
 
     if (ris) {
       // create a token
-      token = jwt.sign(ris, app.get('superSecret'), {
+      token = jwt.sign(req.body.name, app.get('superSecret'), {
         expiresInMinutes: 1440
       });
     }
