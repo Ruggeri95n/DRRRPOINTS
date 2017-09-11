@@ -1,0 +1,51 @@
+
+<div class="jumbotron text-center">
+    <h1>{{message}}</h1>
+</div>
+<div class="container-fluid">
+<div class="row centered">
+    <div class="col-md-6 col-sm-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                Impopunteggi
+            </div>
+            <div class="panel-body text-center">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr ng-repeat="user in Users">
+                            <td>
+                                <img src="{{ user[0].pic }}">
+                                <br>
+                                <i>{{ user[0].nome }}</i>
+                                <br>
+                                {{ user[0].punti }}
+                            </td>
+                            <td>
+                                <img src="{{ user[1].pic }}">
+                                <br>
+                                <i>{{ user[1].nome }}</i>
+                                <br>
+                                {{ user[1].punti }}
+                            </td>
+                            <td>
+                                <img src="{{ user[2].pic }}">
+                                <br>
+                                <i>{{ user[2].nome }}</i>
+                                <br>
+                                {{ user[2].punti }}
+                            </td>
+                            <td>
+                                <img src="{{ user[3].pic }}">
+                                <br>
+                                <i>{{ user[3].nome }}</i>
+                                <br>
+                                {{ user[3].punti }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
