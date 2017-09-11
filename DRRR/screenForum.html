@@ -1,6 +1,5 @@
-
 <div class="jumbotron text-center">
-        <h1>{{message}}</h1>
+    <h1>{{message}}</h1>
 </div>
 
 <div class="container-fluid">
@@ -8,10 +7,11 @@
         <div class="col-md-6 col-sm-6">
             <div class="panel panel-primary" ng-repeat="foto in Foto">
                 <div class="panel-info text-center">
-                    <h3>{{ foto.numero }} - {{ foto.titolo }}</h3>
+                    <h3>{{ foto.numero }} - {{ foto.data }}</h3>
                 </div>
                 <div class="panel-body text-center">
-                    <img src=/"{{ foto.src }}/" class="img-rounded"> <!-- Da fixare la dimensione delle immagini -->
+                    <img src=/ "{{ foto.src }}/" class="img-rounded">
+                    <!-- Da fixare la dimensione delle immagini -->
                     <div class="panel panel-default">
                         <div class="panel-body">{{foto.descrizione}}</div>
                     </div>
