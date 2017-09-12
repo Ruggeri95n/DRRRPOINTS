@@ -8,18 +8,46 @@
             <div class="text-center" ng-show="notLogin">
                 <h2>Bisogna loggare per accedere all' area screen.</h2>
             </div>
-            <div class="panel panel-primary" ng-repeat="foto in Foto">
-                <div class="panel-info text-center">
-                    <h3>{{ foto.numero }} - {{ foto.data }}</h3>
+            <div class="panel panel-info" ng-repeat="foto in Foto">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="media">
+                                <div class="media-left media-top" style="margin-left: 15px; margin-top: 15px;">
+                                    <img ng-src="{{foto.pic}}" class="media-object img-rounded">
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">{{foto.nome}}</h4>
+                                    <p>{{ foto.data }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            {{foto.numero}}
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body text-center">
-                    <img ng-src="screen/{{foto.src}}" class="img-rounded">
-                    <!-- Da fixare la dimensione delle immagini -->
-                    <div class="panel panel-default">
-                        <div class="panel-body">{{foto.descrizione}}</div>
+                <div class="panel-body">
+                    <img ng-src="screen/{{foto.src}}" class="img-responsive img-rounded" style="display: block;margin: auto;">
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-sm-6 text-left">
+                                    {{foto.titolo}}
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    {{foto.like}}<i ng-click="plusOne($index)" class="glyphicon glyphicon-thumbs-up" style="margin-right: 10px;"></i>
+                                    {{foto.dislike}}<i ng-click="minusOne($index)" class="glyphicon glyphicon-thumbs-down" style="float: right;"></i>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                {{foto.descrizione}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

@@ -176,4 +176,12 @@ indexApp.controller("gestisciScreen", function ($scope, $http) {
     }, function (errore) {
         $scope.notLogin = true;
     });
+
+    $scope.plusOne = function (index) {
+        $scope.Foto[index].like ++;
+    };
+
+    $scope.minusOne = function (index) {
+        $scope.Foto[index].dislike ++;
+    };
 });

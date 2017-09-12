@@ -73,7 +73,7 @@ exports.findPost = function (start, end, callback) {
       throw err;
     }
 
-    con.query("SELECT S.id as numero, name as src, nome, pic, commento as descrizione, data FROM screen as S, utenti as U WHERE S.id = U.id AND S.id >= " + start + " LIMIT " + (start+end) + ";",
+    con.query("SELECT S.id as numero, name as src, nome, pic, commento as descrizione, data, titolo FROM screen as S, utenti as U WHERE id_utente = U.id AND S.id >= " + start + " LIMIT " + (start+end) + ";",
       function (err, result) {
         if (err) {
           callback(false, "Errore di connessione alla tabella degli utenti.");
