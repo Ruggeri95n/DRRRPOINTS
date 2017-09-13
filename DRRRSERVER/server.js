@@ -51,7 +51,8 @@ app.get('/', function (req, res) {
 });
 
 //  Restituisce la lista degli utenti con i punteggi associati
-app.post('/users', function (req, res) {;
+app.post('/users', function (req, res) {
+  ;
   database.getUsers(function (successo, message, result) {
     res.json({
       success: successo,
@@ -74,9 +75,14 @@ app.post('/singup', function (req, res) {
   else  // save the new user
   {
     database.saveUser(req.body.user, function (successo) {
+      var messaggio = "Errore durante la registrazione.";
+
+      if (successo)
+        messaggio = "Sei stato registrato.";
+
       res.json({
         success: successo,
-        message: 'Sei stato registrato.'
+        message: messaggio
       });
     });
   }
@@ -156,6 +162,66 @@ apiRoutes.post('/getScreen', function (req, res) {
       post: result
     });
   });
+});
+
+apiRoutes.post('/votaScreen', function (req, res) {
+  if (req.body.id_screen && (req.body.voto != undefined)) {
+    var voto = req.body.voto;
+    database.getUserId(req.decoded, function (ris, message, result) {
+      if (ris) {
+        var user_id = result.id;
+        database.getVoto(req.body.id_screen, user_id, function (ris, message, result) {
+          if (ris) {
+            if (result.voto == voto)
+              res.json({
+                success: false,
+                stop: true,
+                reverse: false
+              });
+            else {
+              database.eliminaVoto(req.body.id_screen, user_id, function (ris) {
+                if (ris) {
+                  database.votaScreen(req.body.id_screen, user_id, voto, function (ris, message) {
+                    res.json({
+                      success: ris,
+                      stop: ris,
+                      reverse: ris
+                    });
+                  });
+                }
+                else
+                  res.json({
+                    success: false,
+                    stop: false,
+                    reverse: false
+                  });
+              });
+            }
+          }
+          else {
+            database.votaScreen(req.body.id_screen, user_id, voto, function (ris, message) {
+              res.json({
+                success: ris,
+                stop: ris,
+                reverse: false
+              });
+            });
+          }
+        });
+      }
+      else {
+        res.json({
+          success: ris,
+          message: message
+        });
+      }
+    });
+  }
+  else
+    res.json({
+      success: false,
+      message: 'Impossibile votare senza l\'id dello screen.',
+    });
 });
 
 app.use('/api', apiRoutes);

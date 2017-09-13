@@ -15,6 +15,7 @@
   <script src="js/angular.min.js"></script>
   <script src="js/angular-route.min.js"></script>
   <script src="js/storage/ngStorage.js"></script>
+  <script src="js/crypto-js/crypto-js.js"></script>
   <script src="js/script.js"></script>
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -53,21 +54,20 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#!/">ImpoPoints</a>
+        <span class="navbar-brand">ImpoPoints</span>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
           <li class="active"><a href="#!/">Home</a></li>
           <li><a href="#!screen">Screen</a></li>
-          <li><a href="#">Page 2</a></li>
-          <li><a href="#">Page 3</a></li>
+          <li><a href="#" data-toggle="tooltip" title="Funzione non ancora abilitata.">Chat</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right ng-hide" ng-hide="logIn">
           <li><a href="#!singup"><span class="glyphicon glyphicon-user"></span> Registrati</a></li>
           <li><a href="#!login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right ng-hide" ng-show="logIn">
-          <li><a href="#!logout"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
+          <li><a href="#!logout"  data-toggle="tooltip" title="Non andare via :c"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
         </ul>
       </div>
     </div>

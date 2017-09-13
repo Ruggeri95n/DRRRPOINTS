@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="media-body">
                                     <h4 class="media-heading">{{foto.nome}}</h4>
-                                    <p>{{ foto.data }}</p>
+                                    <p>{{ foto.data | date }}</p>
                                 </div>
                             </div>
                         </div>
@@ -38,8 +38,12 @@
                                     {{foto.titolo}}
                                 </div>
                                 <div class="col-sm-6 text-right">
-                                    {{foto.like}}<i ng-click="plusOne($index)" class="glyphicon glyphicon-thumbs-up" style="margin-right: 10px;"></i>
-                                    {{foto.dislike}}<i ng-click="minusOne($index)" class="glyphicon glyphicon-thumbs-down" style="float: right;"></i>
+                                    <button type="button" class="btn btn-default" ng-click="minusOne($index)">
+                                        <span class="glyphicon glyphicon-thumbs-down" style="color:red;" aria-hidden="true"> {{foto.n_dislike}}</span>
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-click="plusOne($index)">
+                                        <span class="glyphicon glyphicon-thumbs-up" style="color:green;" aria-hidden="true"> {{foto.n_like}}</span>
+                                    </button>
                                 </div>
                             </div>
                             <div class="panel-body">

@@ -39,6 +39,7 @@ var curToken = { value: "", enable: false };
 // create the controller and inject Angular's $scope
 indexApp.controller('homeController', function ($scope, $http) {
     $scope.message = "Home Page";
+    $scope.Users = [{ pic: '' }, { pic: '' }, { pic: '' }, { pic: '' }];
     $scope.page = 1;
 
     $scope.next = function () {
@@ -47,8 +48,7 @@ indexApp.controller('homeController', function ($scope, $http) {
         if ($scope.allUsers.length % 16 > 0)
             extra = 1;
 
-        if ($scope.page + 1 <= ($scope.allUsers.length / 16) + extra)
-        {
+        if ($scope.page + 1 <= ($scope.allUsers.length / 16) + extra) {
             $scope.page++;
             visualizza($scope.page, $scope.allUsers);
         }
@@ -73,7 +73,7 @@ indexApp.controller('homeController', function ($scope, $http) {
         }
     });
 
-    var visualizza = function(pagina, utenti) {
+    var visualizza = function (pagina, utenti) {
         var dataMat = [];
         var i = (16 * (pagina - 1)), j = 0;
 
@@ -129,7 +129,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
     $scope.login = function () {
         var parametri = {
             name: $scope.username,
-            password: $scope.password
+            password: CryptoJS.SHA1($scope.password).toString()
         };
 
         $http({
@@ -142,7 +142,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
                 curToken.value = response.data.token;
                 curToken.enable = true;
                 $scope.hideMenu(true);
-                $location.path('/home');
+                $location.path('/');
             }
             else
                 alert("Error! " + response.data.message);
@@ -152,14 +152,14 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
     }
 });
 
-indexApp.controller("gestisciSingup", function ($scope, $http) {
+indexApp.controller("gestisciSingup", function ($scope, $http, $location) {
     $scope.message = "Registrati";
 
     $scope.registra = function () {
         var parametri = {
             user: {
                 name: $scope.username,
-                password: $scope.password,
+                password: CryptoJS.SHA1($scope.password).toString(),
                 pic: $scope.selectedPic
             }
         };
@@ -172,7 +172,7 @@ indexApp.controller("gestisciSingup", function ($scope, $http) {
         }).then(function (response) {
             if (response.data.success) {
                 alert(response.data.message);
-                $location.path('/home');
+                $location.path('/login');
             }
             else
                 alert(response.data.message);
@@ -182,7 +182,6 @@ indexApp.controller("gestisciSingup", function ($scope, $http) {
     }
 });
 
-// gestisciScreen
 indexApp.controller("gestisciScreen", function ($scope, $http) {
     $scope.message = "Area Screen";
     $scope.notLogin = false;
@@ -208,10 +207,46 @@ indexApp.controller("gestisciScreen", function ($scope, $http) {
     });
 
     $scope.plusOne = function (index) {
-        $scope.Foto[index].like++;
+        var parametri = {
+            token: curToken.value,
+            id_screen: $scope.Foto[index].numero,
+            voto: 1
+        };
+
+        $http({
+            method: "POST",
+            url: "http://localhost:3001/api/votaScreen",
+            headers: { 'Content-Type': 'application/json' },
+            data: parametri
+        }).then(function (response) {
+            if (response.data.success)
+            {
+                $scope.Foto[index].n_like++;
+                if (response.data.reverse)
+                    $scope.Foto[index].n_dislike--;
+            }
+        });
     };
 
     $scope.minusOne = function (index) {
-        $scope.Foto[index].dislike++;
+        var parametri = {
+            token: curToken.value,
+            id_screen: $scope.Foto[index].numero,
+            voto: 0
+        };
+
+        $http({
+            method: "POST",
+            url: "http://localhost:3001/api/votaScreen",
+            headers: { 'Content-Type': 'application/json' },
+            data: parametri
+        }).then(function (response) {
+            if (response.data.success)
+            {
+                $scope.Foto[index].n_dislike++;
+                if (response.data.reverse)
+                    $scope.Foto[index].n_like--;
+            }
+        });
     };
 });

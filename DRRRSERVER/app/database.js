@@ -11,9 +11,9 @@ exports.saveUser = function (user, callback) {
       throw err;
     }
 
-    var sql = "INSERT INTO utenti (nome, password, pic, punti, livello) VALUES ?";
+    var sql = "INSERT INTO utenti (nome, password, pic) VALUES ?";
     var values = [
-      [user.name, user.password, user.pic, user.punti, user.livello],
+      [user.name, user.password, user.pic],
     ];
 
     con.query(sql, [values], function (err, result) {
@@ -63,9 +63,9 @@ exports.findUser = function (username, password, callback) {
   });
 };
 
-exports.findPost = function (start, end, callback) {
+exports.getUserId = function (username, callback) {
   var con = mysql.createConnection(config);
-  
+
   con.connect(function (err) {
     if (err) {
       callback(false, "Errore di connessione al database.");
@@ -73,7 +73,38 @@ exports.findPost = function (start, end, callback) {
       throw err;
     }
 
-    con.query("SELECT * FROM info_screen WHERE numero >= " + start + " LIMIT " + (start+end) + ";",
+    con.query("SELECT * FROM utenti WHERE nome = " + username + ";",
+      function (err, result) {
+        if (err) {
+          callback(false, "Errore di connessione alla tabella degli utenti.");
+          con.end();
+          throw err;
+        }
+        else {
+          if (result.length > 0) {
+            console.log(result[0]);
+            callback(true, "Id trovato.", result[0]);
+          }
+          else {
+            callback(false, "Id utente non trovato.");
+          }
+          con.end();
+        }
+      });
+  });
+};
+
+exports.findPost = function (start, end, callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false, "Errore di connessione al database.");
+      con.end();
+      throw err;
+    }
+
+    con.query("SELECT * FROM info_screen WHERE numero >= " + start + " LIMIT " + (start + end) + ";",
       function (err, result) {
         if (err) {
           callback(false, "Errore di connessione alla tabella degli utenti.");
@@ -116,5 +147,90 @@ exports.getUsers = function (callback) {
           con.end();
         }
       });
+  });
+};
+
+exports.votaScreen = function (id_screen, id_user, voto, callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false);
+      con.end();
+      throw err;
+    }
+
+    var sql = "INSERT INTO like_screen (id_user, id_screen, voto) VALUES ?";
+    var values = [
+      [id_user, id_screen, voto],
+    ];
+
+    con.query(sql, [values], function (err, result) {
+      if (err) {
+        callback(false);
+        con.end();
+        throw err;
+      }
+      else {
+        con.end();
+        callback(true);
+      }
+    });
+  });
+};
+
+exports.getVoto = function (id_screen, id_user, callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false, "Errore di connessione al database.");
+      con.end();
+      throw err;
+    }
+
+    con.query("SELECT * FROM like_screen WHERE id_user = " + id_user + " AND id_screen = " + id_screen + ";",
+      function (err, result) {
+        if (err) {
+          callback(false, "Errore di connessione alla tabella dei voti.");
+          con.end();
+          throw err;
+        }
+        else {
+          if (result.length > 0) {
+            callback(true, "Voto trovato.", result[0]);
+          }
+          else {
+            callback(false, "Voto non trovato.");
+          }
+          con.end();
+        }
+      });
+  });
+};
+
+exports.eliminaVoto = function (id_screen, id_user, callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false);
+      con.end();
+      throw err;
+    }
+
+    var sql = "DELETE FROM like_screen WHERE id_user = " + id_user + " AND id_screen = " + id_screen + ";";
+
+    con.query(sql, function (err, result) {
+      if (err) {
+        callback(false);
+        con.end();
+        throw err;
+      }
+      else {
+        con.end();
+        callback(true);
+      }
+    });
   });
 };
