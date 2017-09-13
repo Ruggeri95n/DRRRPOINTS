@@ -39,30 +39,60 @@ var curToken = { value: "", enable: false };
 // create the controller and inject Angular's $scope
 indexApp.controller('homeController', function ($scope, $http) {
     $scope.message = "Home Page";
+    $scope.page = 1;
 
-    /*$http({
+    $scope.next = function () {
+        var extra = 0;
+
+        if ($scope.allUsers.length % 16 > 0)
+            extra = 1;
+
+        if ($scope.page + 1 <= ($scope.allUsers.length / 16) + extra)
+        {
+            $scope.page++;
+            visualizza($scope.page, $scope.allUsers);
+        }
+    };
+
+    $scope.previous = function () {
+        if ($scope.page > 1) {
+            $scope.page--;
+            visualizza($scope.page, $scope.allUsers);
+        }
+    };
+
+    $http({
         method: "POST",
         url: "http://localhost:3001/users",
-    }).then(function SucInfinito(response) {
+        headers: { 'Content-Type': 'application/json' }
+    }).then(function (response) {
         if (response.data.success) {
-            var dataMat = [];
-            var i = 0, j = 0;
+            $scope.allUsers = response.data.users;
 
-            dataMat[0] = [];
-
-            while (i < response.data.users.length) {
-                dataMat[j].push(response.data.users[i]);
-                i++;
-
-                if (i % 4 == 0) {
-                    j++;
-                    dataMat[j] = [];
-                }
-            }
-
-            $scope.Users = dataMat;
+            visualizza($scope.page, $scope.allUsers);
         }
-    });*/
+    });
+
+    var visualizza = function(pagina, utenti) {
+        var dataMat = [];
+        var i = (16 * (pagina - 1)), j = 0;
+
+        dataMat[0] = [];
+
+        while (i < (pagina * 16) && i < utenti.length) {
+            if (!utenti[i].punti)
+                utenti[i].punti = 0;
+
+            dataMat[j].push(utenti[i]);
+            i++;
+
+            if ((i < (pagina * 16) && i < utenti.length) && (i % 4 == 0)) {
+                j++;
+                dataMat[j] = [];
+            }
+        }
+        $scope.Users = dataMat;
+    };
 });
 
 indexApp.controller('gestisciLogout', function ($scope, $location) {
@@ -178,10 +208,10 @@ indexApp.controller("gestisciScreen", function ($scope, $http) {
     });
 
     $scope.plusOne = function (index) {
-        $scope.Foto[index].like ++;
+        $scope.Foto[index].like++;
     };
 
     $scope.minusOne = function (index) {
-        $scope.Foto[index].dislike ++;
+        $scope.Foto[index].dislike++;
     };
 });

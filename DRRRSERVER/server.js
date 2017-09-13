@@ -50,6 +50,17 @@ app.get('/', function (req, res) {
   res.send('Hey you!');
 });
 
+//  Restituisce la lista degli utenti con i punteggi associati
+app.post('/users', function (req, res) {;
+  database.getUsers(function (successo, message, result) {
+    res.json({
+      success: successo,
+      message: message,
+      users: result
+    });
+  });
+});
+
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
 

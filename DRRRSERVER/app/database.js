@@ -92,3 +92,29 @@ exports.findPost = function (start, end, callback) {
       });
   });
 };
+
+//  Restituisce i primi n_users con punteggio maggiore
+exports.getUsers = function (callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false, "Errore di connessione al database.");
+      con.end();
+      throw err;
+    }
+
+    con.query("SELECT * FROM info_user ORDER BY punti DESC;",
+      function (err, result) {
+        if (err) {
+          callback(false, "Errore di connessione alla tabella degli user.");
+          con.end();
+          throw err;
+        }
+        else {
+          callback(true, "Users prelevati.", result);
+          con.end();
+        }
+      });
+  });
+};
