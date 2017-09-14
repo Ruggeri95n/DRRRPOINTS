@@ -153,7 +153,7 @@ apiRoutes.post('/', function (req, res) {
 
 apiRoutes.post('/getScreen', function (req, res) {
   var start = req.body.start || 0;
-  var end = req.body.end || 10;
+  var end = req.body.end || 50;
 
   database.findPost(start, end, function (ris, message, result) {
     res.json({

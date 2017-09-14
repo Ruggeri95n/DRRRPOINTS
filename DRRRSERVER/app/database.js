@@ -82,7 +82,6 @@ exports.getUserId = function (username, callback) {
         }
         else {
           if (result.length > 0) {
-            console.log(result[0]);
             callback(true, "Id trovato.", result[0]);
           }
           else {

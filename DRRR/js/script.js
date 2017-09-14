@@ -98,7 +98,7 @@ indexApp.controller('homeController', function ($scope, $http) {
 indexApp.controller('gestisciLogout', function ($scope, $location) {
     $scope.hideMenu(false);
     curToken = { value: "", enable: false };
-    $location.path('/home');
+    $location.path('/');
 });
 
 /**
@@ -182,14 +182,15 @@ indexApp.controller("gestisciSingup", function ($scope, $http, $location) {
     }
 });
 
-indexApp.controller("gestisciScreen", function ($scope, $http) {
+indexApp.controller("gestisciScreen", function ($scope, $http, $window) {
     $scope.message = "Area Screen";
+    $scope.page = 1;
     $scope.notLogin = false;
 
     var parametri = {
         token: curToken.value,
         start: 0,
-        end: 10
+        end: 50
     };
 
     $http({
@@ -198,13 +199,34 @@ indexApp.controller("gestisciScreen", function ($scope, $http) {
         headers: { 'Content-Type': 'application/json' },
         data: parametri
     }).then(function (response) {
-        if (response.data.success)
-            $scope.Foto = response.data.post;
+        if (response.data.success) {
+            $scope.allScreen = response.data.post;
+            visualizza($scope.page, $scope.allScreen);
+        }
         else
             alert(response.data.message)
     }, function (errore) {
         $scope.notLogin = true;
     });
+
+    var visualizza = function (pagina, post) {
+        var post_for_page = 10;
+        var start = post_for_page * (pagina - 1);
+        var end = post_for_page * pagina;
+
+        if (end > post.length)
+            end = post.length;
+
+        var app = [];
+        var j = 0;
+
+        for (var i = start; i < end; i++) {
+            app[j] = post[i];
+            j++;
+        }
+
+        $scope.Foto = app;
+    };
 
     $scope.plusOne = function (index) {
         var parametri = {
@@ -219,8 +241,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http) {
             headers: { 'Content-Type': 'application/json' },
             data: parametri
         }).then(function (response) {
-            if (response.data.success)
-            {
+            if (response.data.success) {
                 $scope.Foto[index].n_like++;
                 if (response.data.reverse)
                     $scope.Foto[index].n_dislike--;
@@ -241,12 +262,33 @@ indexApp.controller("gestisciScreen", function ($scope, $http) {
             headers: { 'Content-Type': 'application/json' },
             data: parametri
         }).then(function (response) {
-            if (response.data.success)
-            {
+            if (response.data.success) {
                 $scope.Foto[index].n_dislike++;
                 if (response.data.reverse)
                     $scope.Foto[index].n_like--;
             }
         });
+    };
+
+    $scope.nextPost = function () {
+        var extra = 0;
+
+        if (($scope.allScreen.length % 10) > 0)
+            extra = 1;
+
+        if ($scope.page + 1 <= ($scope.allScreen.length / 10) + extra)
+        {
+            $scope.page++;
+            visualizza($scope.page, $scope.allScreen);
+            $window.scrollTo(0, 0);
+        }
+    };
+
+    $scope.previousPost = function () {
+        if ($scope.page > 1) {
+            $scope.page--;
+            visualizza($scope.page, $scope.allScreen);
+            $window.scrollTo(0, 0);
+        }
     };
 });
