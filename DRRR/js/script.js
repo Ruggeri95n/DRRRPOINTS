@@ -185,7 +185,7 @@ indexApp.controller("gestisciSingup", function ($scope, $http, $location) {
 indexApp.controller("gestisciScreen", function ($scope, $http, $window) {
     $scope.message = "Area Screen";
     $scope.page = 1;
-    $scope.notLogin = false;
+    $scope.notLogin = true;
 
     var parametri = {
         token: curToken.value,
@@ -200,6 +200,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window) {
         data: parametri
     }).then(function (response) {
         if (response.data.success) {
+            $scope.notLogin = false;
             $scope.allScreen = response.data.post;
             visualizza($scope.page, $scope.allScreen);
         }

@@ -1,10 +1,23 @@
-<div class="jumbotron text-center">
+<div class="jumbotron text-center" ng-show="notLogin">
     <h1>{{message}}</h1>
 </div>
 
 <div class="container-fluid">
-    <div class="row centered">
-        <div class="col-md-6 col-sm-6">
+    <!-- centered tolto da qua -->
+    <div class="row">
+
+        <div class="col-xs-3 col-md-3">
+            <div ng-hide="notLogin">
+                <ul class="nav nav-pills nav-stacked" style="position: fixed;margin-top: 60px;">
+                    <li class="active"><button type="button" class="btn btn-link">Menù Screen</button></li>
+                    <li><button type="button" class="btn btn-link">opzione 1</button></li>
+                    <li><button type="button" class="btn btn-link">opzione 2</button></li>
+                    <li><button type="button" class="btn btn-link">opzione 3</button></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-md-6" style="margin-top: 60px;">
             <div class="text-center" ng-show="notLogin">
                 <h2>Bisogna loggare per accedere all' area screen.</h2>
             </div>
@@ -53,7 +66,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-footer text-center">
+            <div class="panel-footer text-center" ng-hide="notLogin">
                 <ul class="pager">
                     <li button type="button" class="btn btn-link" ng-click="previousPost()"><span class="glyphicon glyphicon-chevron-left"></span></li>
                     <li><strong>{{ page }}</strong></li>
@@ -62,4 +75,9 @@
                 <h6><small>scorri screen</small></h6>
             </div>
         </div>
+
+        <div class="col-xs-3 col-md-3">
+        </div>
+
     </div>
+</div>
