@@ -11,6 +11,12 @@ exports.saveUser = function (user, callback) {
       throw err;
     }
 
+    if (!user.name || !user.password || !user.pic) {
+      con.end();
+      callback(false);
+      return;
+    }
+
     var sql = "INSERT INTO utenti (nome, password, pic) VALUES ?";
     var values = [
       [user.name, user.password, user.pic],
@@ -87,6 +93,34 @@ exports.getUserId = function (username, callback) {
           else {
             callback(false, "Id utente non trovato.");
           }
+          con.end();
+        }
+      });
+  });
+};
+
+exports.userIsReg = function (username, callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false);
+      con.end();
+      throw err;
+    }
+
+    con.query("SELECT * FROM utenti WHERE nome = " + username + ";",
+      function (err, result) {
+        if (err) {
+          callback(false);
+          con.end();
+          throw err;
+        }
+        else {
+          if (result.length > 0)
+            callback(true, true);
+          else
+            callback(true, false);
           con.end();
         }
       });

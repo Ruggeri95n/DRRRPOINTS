@@ -1,6 +1,5 @@
-
 <div class="jumbotron text-center">
-        <h1>{{message}}</h1>
+    <h1>{{message}}</h1>
 </div>
 <div class="container-fluid">
     <div class="row centered">
@@ -11,51 +10,78 @@
                 </div>
                 <div class="panel-body text-center">
                     <!--Login form-->
-                    <form class="form-horizontal" ng-model="formReg" name="formReg" novalidate>
+                    <form class="form-horizontal" ng-model="formReg" name="formReg">
                         <!--Selezione avatar-->
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
-                                    <td><img src="pic/simon.png"><br><input type="radio" ng-model="selectedPic" value="pic/simon.png"/></td>
-                                    <td><img src="pic/lady.png"><br><input type="radio" ng-model="selectedPic" value="pic/lady.png"/></td>
-                                    <td><img src="pic/chinese.png"><br><input type="radio" ng-model="selectedPic" value="pic/chinese.png"/></td>
-                                    <td><img src="pic/woman.png"><br><input type="radio" ng-model="selectedPic" value="pic/woman.png"/></td>
+                                    <td><img src="pic/simon.png"><br><input type="radio" ng-model="selectedPic" value="pic/simon.png"
+                                        /></td>
+                                    <td><img src="pic/lady.png"><br><input type="radio" ng-model="selectedPic" value="pic/lady.png"
+                                        /></td>
+                                    <td><img src="pic/chinese.png"><br><input type="radio" ng-model="selectedPic" value="pic/chinese.png"
+                                        /></td>
+                                    <td><img src="pic/woman.png"><br><input type="radio" ng-model="selectedPic" value="pic/woman.png"
+                                        /></td>
                                 </tr>
                                 <tr>
-                                    <td><img src="pic/izaya.png"><br><input type="radio" ng-model="selectedPic" value="pic/izaya.png"/></td>
-                                    <td><img src="pic/setton.png"><br><input type="radio" ng-model="selectedPic" value="pic/setton.png"/></td>
-                                    <td><img src="pic/sizuo.png"><br><input type="radio" ng-model="selectedPic" value="pic/sizuo.png"/></td>
-                                    <td><img src="pic/kanra.png"><br><input type="radio" ng-model="selectedPic" value="pic/kanra.png"/></td>
+                                    <td><img src="pic/izaya.png"><br><input type="radio" ng-model="selectedPic" value="pic/izaya.png"
+                                        /></td>
+                                    <td><img src="pic/setton.png"><br><input type="radio" ng-model="selectedPic" value="pic/setton.png"
+                                        /></td>
+                                    <td><img src="pic/sizuo.png"><br><input type="radio" ng-model="selectedPic" value="pic/sizuo.png"
+                                        /></td>
+                                    <td><img src="pic/kanra.png"><br><input type="radio" ng-model="selectedPic" value="pic/kanra.png"
+                                        /></td>
                                 </tr>
                                 <tr>
-                                    <td><img src="pic/saika.png"><br><input type="radio" ng-model="selectedPic" value="pic/saika.png"/></td>
-                                    <td><img src="pic/bakyura.png"><br><input type="radio" ng-model="selectedPic" value="pic/bakyura.png"/></td>
-                                    <td><img src="pic/shinra.png"><br><input type="radio" ng-model="selectedPic" value="pic/shinra.png"/></td>
-                                    <td><img src="pic/lolita.png"><br><input type="radio" ng-model="selectedPic" value="pic/lolita.png"/></td>
+                                    <td><img src="pic/saika.png"><br><input type="radio" ng-model="selectedPic" value="pic/saika.png"
+                                        /></td>
+                                    <td><img src="pic/bakyura.png"><br><input type="radio" ng-model="selectedPic" value="pic/bakyura.png"
+                                        /></td>
+                                    <td><img src="pic/shinra.png"><br><input type="radio" ng-model="selectedPic" value="pic/shinra.png"
+                                        /></td>
+                                    <td><img src="pic/lolita.png"><br><input type="radio" ng-model="selectedPic" value="pic/lolita.png"
+                                        /></td>
                                 </tr>
                                 <tr>
-                                    <td><img src="pic/koukin.png"><br><input type="radio" ng-model="selectedPic" value="pic/koukin.png"/></td>
-                                    <td><img src="pic/gg.png"><br><input type="radio" ng-model="selectedPic" value="pic/gg.png"/></td>
-                                    <td><img src="pic/zawa.png"><br><input type="radio" ng-model="selectedPic" value="pic/zawa.png"/></td>
-                                    <td><img src="pic/chineseF.png"><br><input type="radio" ng-model="selectedPic" value="pic/chineseF.png"/></td>
+                                    <td><img src="pic/koukin.png"><br><input type="radio" ng-model="selectedPic" value="pic/koukin.png"
+                                        /></td>
+                                    <td><img src="pic/gg.png"><br><input type="radio" ng-model="selectedPic" value="pic/gg.png"
+                                        /></td>
+                                    <td><img src="pic/zawa.png"><br><input type="radio" ng-model="selectedPic" value="pic/zawa.png"
+                                        /></td>
+                                    <td><img src="pic/chineseF.png"><br><input type="radio" ng-model="selectedPic" value="pic/chineseF.png"
+                                        /></td>
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="row centered">
-                            <div class="col-md-5 col-sm-5"  style="align-content: center;">
+                        <span><h5><small>Se non si seleziona nessun avatar vi sarà assegnato quello di default.</small></h5></span>
+                        <div class="row centered" style="margin-top: 10px;">
+                            <div class="col-md-5 col-sm-5" style="align-content: center;">
+                                
                                 <!--username-->
                                 <div class="form-group">
                                     <label for="nome">Username:</label>
-                                    <input type="text" class="form-control" name="username" ng-model="username" placeholder="Inserisci il tuo nome utente" />
+                                    <input type="text" class="form-control" maxlength="15" name="username" ng-model="username" placeholder="Inserisci il tuo nome utente"
+                                        required/>
+                                    <span style="color:red" ng-show="formReg.username.$dirty && formReg.username.$invalid">
+                                            Username is required.
+                                        </span>
                                 </div>
                                 <!--password-->
                                 <div class="form-group">
                                     <label for="psw">Password:</label>
-                                    <input type="password" name="password" class="form-control" placeholder="inserisci la password per il tuo account" ng-model="password" />
+                                    <input type="password" name="password" maxlength="16" class="form-control" placeholder="inserisci la password per il tuo account"
+                                        ng-model="password" required/>
+                                    <span style="color:red" ng-show="formReg.password.$dirty && formReg.password.$invalid">
+                                            Password is required.
+                                        </span>
                                 </div>
                                 <!--submit button-->
                                 <div class="form-group">
-                                    <button type="submit" ng-click="registra()" class="btn btn-primary center-block" >Registrati</button> <!-- ng-disabled="!form.$valid" -->
+                                    <button type="submit" ng-click="registra()" ng-disabled="formReg.username.$invalid || formReg.password.$invalid" class="btn btn-primary center-block">Registrati</button>
+                                    <!-- ng-disabled="!form.$valid" -->
                                 </div>
                             </div>
                         </div>

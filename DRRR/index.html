@@ -17,6 +17,7 @@
   <script src="js/storage/ngStorage.js"></script>
   <script src="js/crypto-js/crypto-js.js"></script>
   <script src="js/ng-file-upload/ng-file-upload.js"></script>
+  <script src="js/storage/ngStorage.js"></script>
   <script src="js/script.js"></script>
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -26,8 +27,6 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   <style>
-    @import url(https://fonts.googleapis.com/css?family=Montserrat);
-
     .centered {
       text-align: center;
       font-size: 0;
@@ -40,52 +39,31 @@
       font-size: 13px;
     }
 
-    svg {
-      display: block;
-      font: 14.5em 'Montserrat';
-      width: 200px;
-      height: 70px;
-      margin: 0 auto;
+    .golden-text {
+      font-size: 22px;
+      color: #D5AD6D;
+      /*if no support for background-clip*/
+      background: -webkit-linear-gradient(transparent, transparent),
+      -webkit-linear-gradient(top, rgba(213, 173, 109, 1) 0%, rgba(213, 173, 109, 1) 26%, rgba(226, 186, 120, 1) 35%, rgba(163, 126, 67, 1) 45%, rgba(145, 112, 59, 1) 61%, rgba(213, 173, 109, 1) 100%);
+      background: -o-linear-gradient(transparent, transparent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .text-copy {
-      fill: none;
-      stroke: rgb(0, 0, 0);
-      stroke-dasharray: 6% 29%;
-      stroke-width: 5px;
-      stroke-dashoffset: 0%;
-      animation: stroke-offset 4s infinite linear;
+    .btn1 {
+      padding: 14px 24px;
+      border: 0 none;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background-color:rgb(33, 33, 33);border-radius:25px;
     }
 
-    .text-copy:nth-child(1) {
-      stroke: #EEEFF3;
-      animation-delay: 0s;
-    }
-
-    .text-copy:nth-child(2) {
-      stroke: #F5F123;
-      animation-delay: -1s;
-    }
-
-    .text-copy:nth-child(3) {
-      stroke: #66FA03;
-      animation-delay: -2s;
-    }
-
-    .text-copy:nth-child(4) {
-      stroke: #09F0DC;
-      animation-delay: -3s;
-    }
-
-    .text-copy:nth-child(5) {
-      stroke: #193AF5;
-      animation-delay: -4s;
-    }
-
-    @keyframes stroke-offset {
-      100% {
-        stroke-dashoffset: -35%;
-      }
+    .btn1:focus,
+    .btn1:active:focus,
+    .btn1.active:focus {
+      outline: 0 none;
+      border-radius:25px;
     }
   </style>
 </head>
@@ -105,28 +83,15 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <span class="navbar-brand">
-          <svg viewBox="0 0 1600 560">
-            <symbol id="s-text">
-              <text text-anchor="middle" x="45%" y="30%">ImpoPoints</text>
-            </symbol>
-          
-            <g class = "g-ants">
-              <use xlink:href="#s-text" class="text-copy"></use>
-              <use xlink:href="#s-text" class="text-copy"></use>
-              <use xlink:href="#s-text" class="text-copy"></use>
-              <use xlink:href="#s-text" class="text-copy"></use>
-              <use xlink:href="#s-text" class="text-copy"></use>
-            </g>
-          </svg>
-
+        <span class="navbar-brand golden-text">
+          ImpoPoints
         </span>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#!/">Home</a></li>
-          <li><a href="#!screen">Screen</a></li>
-          <li><a href="#" data-toggle="tooltip" title="Funzione non ancora abilitata.">Chat</a></li>
+          <li id="linkHome"><a href="#!/">Home</a></li>
+          <li id="linkScreen"><a href="#!screen">Screen</a></li>
+          <li id="linkChat"><a data-toggle="tooltip" title="Funzione non ancora abilitata.">Chat</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right ng-hide" ng-hide="logIn">
           <li><a href="#!singup"><span class="glyphicon glyphicon-user"></span> Registrati</a></li>

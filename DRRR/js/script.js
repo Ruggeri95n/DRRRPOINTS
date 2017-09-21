@@ -1,5 +1,5 @@
 // create the module
-var indexApp = angular.module('pointApp', ['ngRoute', 'ngStorage', 'ngFileUpload']);
+var indexApp = angular.module('pointApp', ['ngRoute', 'ngStorage', 'ngFileUpload', 'ngStorage']);
 
 //  Aggiunta della variabile e funzione globali per nascondere/mostrare il menù
 indexApp.run(function ($rootScope) {
@@ -36,8 +36,61 @@ indexApp.config(function ($routeProvider) {
 //  variabile contenente il token
 var curToken = { value: "", enable: false };
 
+var menuSet = function (val) {
+    if (val == 0) {
+        e1 = document.getElementById("linkHome");
+        e1.setAttribute("class", "active");
+
+        e2 = document.getElementById("linkScreen");
+        e2.setAttribute("class", "");
+
+        //e3 = document.getElementById("mio_elemento");
+        //e3.setAttribute("class", "");
+    }
+    else
+        if (val == 1) {
+            e1 = document.getElementById("linkHome");
+            e1.setAttribute("class", "");
+
+            e2 = document.getElementById("linkScreen");
+            e2.setAttribute("class", "active");
+
+            //e3 = document.getElementById("mio_elemento");
+            //e3.setAttribute("class", "");
+        }
+        else
+            if (val == 2) {
+                e1 = document.getElementById("linkHome");
+                e1.setAttribute("class", "");
+
+                e2 = document.getElementById("linkScreen");
+                e2.setAttribute("class", "");
+
+                //e3 = document.getElementById("mio_elemento");
+                //e3.setAttribute("class", "active");
+            }
+            else {
+                e1 = document.getElementById("linkHome");
+                e1.setAttribute("class", "");
+
+                e2 = document.getElementById("linkScreen");
+                e2.setAttribute("class", "");
+
+                //e3 = document.getElementById("mio_elemento");
+                //e3.setAttribute("class", "");
+            }
+
+};
+
 // create the controller and inject Angular's $scope
-indexApp.controller('homeController', function ($scope, $http) {
+indexApp.controller('homeController', function ($scope, $http, $localStorage) {
+    if ($localStorage.XToken) {
+        curToken = $localStorage.XToken;
+        $scope.hideMenu(true);
+    }
+
+    menuSet(0);
+
     $scope.message = "Home Page";
     $scope.Users = [];
     $scope.Users[0] = [{ pic: '' }, { pic: '' }, { pic: '' }, { pic: '' }];
@@ -95,17 +148,24 @@ indexApp.controller('homeController', function ($scope, $http) {
     };
 });
 
-indexApp.controller('gestisciLogout', function ($scope, $location) {
+indexApp.controller('gestisciLogout', function ($scope, $location, $localStorage) {
     $scope.hideMenu(false);
     curToken = { value: "", enable: false };
+    $localStorage.XToken = null;
     $location.path('/');
 });
 
 /**
  * Username is the e-mail of the persone who want to access in it's personal profile
  */
-indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
-    //messaggio di entrata
+indexApp.controller('gestisciLogin', function ($scope, $http, $location, $localStorage) {
+    if ($localStorage.XToken) {
+        curToken = $localStorage.XToken;
+        $scope.hideMenu(true);
+    }
+
+    menuSet();
+
     $scope.message = "Login page";
 
     //   Autenticazione via token (se si è precedentementi loggati)
@@ -127,6 +187,19 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
 
     // funzione per l'invio dei dati di login a node
     $scope.login = function () {
+
+        if ($scope.username == undefined)
+            return;
+        else
+            if ($scope.username.length < 4)
+                return;
+
+        if ($scope.password == undefined)
+            return;
+        else
+            if ($scope.password.length < 4)
+                return;
+
         var parametri = {
             name: $scope.username,
             password: CryptoJS.SHA1($scope.password).toString()
@@ -142,25 +215,35 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location) {
                 curToken.value = response.data.token;
                 curToken.enable = true;
                 $scope.hideMenu(true);
-                $location.path('/');
+                $localStorage.XToken = curToken;
+                $location.path('/screen');
             }
             else
-                alert("Error! " + response.data.message);
+                alert("Errore! " + response.data.message);
         }, function (response) {
             alert("Si è verificato un errore nella richiesta di autenticazione!");
         });
     }
 });
 
-indexApp.controller("gestisciSingup", function ($scope, $http, $location) {
+indexApp.controller("gestisciSingup", function ($scope, $http, $location, $localStorage) {
+    if ($localStorage.XToken) {
+        curToken = $localStorage.XToken;
+        $scope.hideMenu(true);
+    }
+
+    menuSet();
+
     $scope.message = "Registrati";
 
     $scope.registra = function () {
+        var pic = $scope.selectedPic || 'pic/shinra.png';
+
         var parametri = {
             user: {
                 name: $scope.username,
                 password: CryptoJS.SHA1($scope.password).toString(),
-                pic: $scope.selectedPic
+                pic: pic
             }
         };
 
@@ -182,8 +265,17 @@ indexApp.controller("gestisciSingup", function ($scope, $http, $location) {
     }
 });
 
-indexApp.controller("gestisciScreen", function ($scope, $http, $window, Upload) {
-    $scope.message = "Area Screen";
+indexApp.controller("gestisciScreen", function ($scope, $http, $window, $localStorage, Upload) {
+    if ($localStorage.XToken) {
+        curToken = $localStorage.XToken;
+        $scope.hideMenu(true);
+    }
+    else
+        if (!curToken.value)
+            return;
+
+    menuSet(1);
+
     $scope.page = 1;
     $scope.notLogin = true;
     $scope.orderBy = 'numero';
@@ -233,7 +325,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, Upload) 
         $scope.Foto = app;
     };
 
-    var chiediScreen = function () {
+    var chiediScreen = function (morePag) {
         $http({
             method: "POST",
             url: "http://localhost:3001/api/getScreen",
@@ -247,7 +339,21 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, Upload) 
         }).then(function (response) {
             if (response.data.success) {
                 $scope.allScreen = response.data.post;
-                visualizza($scope.page, $scope.allScreen);
+
+                if (morePag) {
+                    var extra = 0;
+
+                    if (($scope.allScreen.length % 10) > 0)
+                        extra = 1;
+
+                    if ($scope.page + 1 <= ($scope.allScreen.length / 10) + extra) {
+                        $scope.page++;
+                        visualizza($scope.page, $scope.allScreen);
+                        $window.scrollTo(0, 0);
+                    }
+                }
+                else
+                    visualizza($scope.page, $scope.allScreen);
             }
             else
                 alert(response.data.message);
@@ -311,10 +417,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, Upload) 
             $window.scrollTo(0, 0);
         }
         else
-        {
-            $scope.page++;
-            chiediScreen();
-        }
+            chiediScreen(true);
     };
 
     $scope.previousPost = function () {
@@ -326,6 +429,18 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, Upload) 
     };
 
     $scope.sendScreen = function () {
+        if ($scope.titolo == undefined || $scope.titolo.length < 1) {
+            $scope.fileError = "Impossibile inviare uno screen senza titolo.";
+            return;
+        }
+
+        if (!$scope.file) {
+            $scope.fileError = "Devi prima selezionare lo screen...";
+            return;
+        }
+
+        $scope.fileError = "";
+
         Upload.upload({
             url: 'http://localhost:3001/api/uploadScreen',
             method: 'POST',
@@ -340,6 +455,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, Upload) 
                 alert(response.data.message);
                 var modal = $('#ScreenModal');
                 modal.modal('hide');
+                $scope.recentiPiu();
             }
             else
                 $scope.fileError = response.data.message || "Errore! File non inviato correttamente.";

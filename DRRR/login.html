@@ -1,35 +1,34 @@
-
 <div class="jumbotron text-center">
     <h1>{{message}}</h1>
 </div>
 
 <div class="container-fluid">
     <div class="row centered">
-        <div class="col-md-6 col-sm-6">
+        <div class="col-md-5 col-sm-5">
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
                     Login
                 </div>
                 <div class="panel-body text-center">
                     <div class="row centered">
-                        <div class="col-md-5 col-sm-5"  style="align-content: center;">
+                        <div class="col-md-5 col-sm-5" style="align-content: center;">
                             <!--Login form-->
-                            <form class="form-horizontal" ng-model="formLogin" name="formLogin" novalidate>
+                            <form class="form-horizontal" ng-model="formLogin" name="formLogin">
                                 <!--username-->
                                 <div class="form-group text-center">
                                     <label for="nome">Username:</label>
-                                    <input type="text" class="form-control" name="username" ng-model="username" placeholder="Nome utente" />
+                                    <input type="text" class="form-control" name="username" ng-model="username" placeholder="Nome utente" required/>
                                 </div>
                                 <!--password-->
                                 <div class="form-group text-center">
                                     <label for="psw">Password:</label>
-                                    <input type="password" name="password" class="form-control" placeholder="Password" ng-model="password" />
+                                    <input type="password" name="password" class="form-control" placeholder="Password" ng-model="password" required/>
                                 </div>
                                 <!--submit button-->
                                 <div class="form-group">
-                                    <button type="submit" ng-click="login()" class="btn btn-primary center-block" >Login</button> <!-- ng-disabled="!form.$valid" -->
-                        
-                                </div>    
+                                    <button type="submit" ng-click="login()" ng-disabled="formLogin.username.$invalid || formLogin.password.$invalid" class="btn btn-primary center-block">Login</button>
+                                    <!-- ng-disabled="!form.$valid" -->
+                                </div>
                             </form>
                         </div>
                     </div>

@@ -1,16 +1,16 @@
-<div class="jumbotron text-center" ng-show="notLogin">
-    <h1>{{message}}</h1>
+<div class="jumbotron text-center" ng-hide="logIn">
+    <h2>Bisogna loggare per accedere all' area screen.</h2>
 </div>
 
-<div class="container-fluid">
+<div class="container-fluid" style="background-color:#2E2B2B;" ng-show="logIn">
     <!-- centered tolto da qua -->
     <div class="row">
 
         <div class="col-xs-3 col-md-3">
-            <div class="btn-group-vertical" ng-hide="notLogin" style="margin-top: 60px;position:fixed;">
-                <h2><span class="label label-primary">Menù Screen</span></h2>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ScreenModal">Carica screen <span class="glyphicon glyphicon-upload" style="margin-left: 5px;"></span></button>
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Ordina per <span class="glyphicon glyphicon-menu-down" style="margin-left: 15px;"></span></button>
+            <div class="btn-group-vertical" style="margin-top: 60px;position:fixed;">
+                <h2><span class="label label-primary" style="background-color:rgb(33, 33, 33)">Menù Screen</span></h2>
+                <button type="button" class="btn" style="color:white;background-color:rgb(33, 33, 33);border-radius:25px;" data-toggle="modal" data-target="#ScreenModal">Carica screen <span class="glyphicon glyphicon-upload" style="margin-left: 5px;"></span></button>
+                <button type="button" class="btn dropdown-toggle" style="color:white;background-color:rgb(33, 33, 33);border-radius:25px;margin-top:5px;" data-toggle="dropdown">Ordina per <span class="glyphicon glyphicon-menu-down" style="margin-left: 15px;"></span></button>
                 <ul class="dropdown-menu">
                     <li><a href ng-click="recentiPiu()">Più recenti</a></li>
                     <li><a href ng-click="recentiMeno()">Meno recenti</a></li>
@@ -45,8 +45,8 @@
                             <br/>
                             <label>Descrizione:</label>
                             <textarea class="form-control" name="descrizione" ng-model="descrizione" rows="3" placeholder="Inserisci qui un commento o una descrizione..."
-                                maxlength="140" style="resize: none;"></textarea>
-                            <small>Max 140 caratteri.</small>
+                                maxlength="200" style="resize: none;"></textarea>
+                            <small>Max 200 caratteri.</small>
                         </form>
                         <br/>
                         <p class="text-danger">{{fileError}}</p>
@@ -61,9 +61,6 @@
         </div>
 
         <div class="col-xs-6 col-md-6" style="margin-top: 60px;">
-            <div class="text-center" ng-show="notLogin">
-                <h2>Bisogna loggare per accedere all' area screen.</h2>
-            </div>
             <div class="panel panel-info" ng-repeat="foto in Foto">
                 <div class="panel-heading">
                     <div class="row">
@@ -91,7 +88,7 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-sm-6 text-left">
-                                    {{foto.titolo}}
+                                    <h4> {{foto.titolo}} </h4>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     <button type="button" class="btn btn-default" ng-click="minusOne($index)">
@@ -103,13 +100,13 @@
                                 </div>
                             </div>
                             <div class="panel-body">
-                                {{foto.descrizione}}
+                                <p class="text-justify"> {{foto.descrizione}} </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="panel-footer text-center" ng-hide="notLogin">
+            <div class="panel-footer text-center">
                 <ul class="pager">
                     <li button type="button" class="btn btn-link" ng-click="previousPost()"><span class="glyphicon glyphicon-chevron-left"></span></li>
                     <li><strong>{{ page }}</strong></li>

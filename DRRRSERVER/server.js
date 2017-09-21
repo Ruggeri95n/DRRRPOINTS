@@ -90,25 +90,43 @@ app.post('/users', function (req, res) {
 //  Registra un nuovo utente
 app.post('/singup', function (req, res) {
 
-  if (!req.body.user) {
-    console.log('Undefined NON PUO ESSERE SALVATO.');
+  if (!req.body.user)
     res.json({
       success: false,
       message: 'Campi mancanti.'
     });
-  }
   else  // save the new user
   {
-    database.saveUser(req.body.user, function (successo) {
-      var messaggio = "Errore durante la registrazione.";
-
-      if (successo)
-        messaggio = "Sei stato registrato.";
-
+    if (!req.body.user.name)
       res.json({
-        success: successo,
-        message: messaggio
+        success: false,
+        message: 'Campi mancanti.'
       });
+
+    database.userIsReg(req.body.user.name, function (ris, isReg) {
+      if (ris)
+        if (!isReg)
+          database.saveUser(req.body.user, function (successo) {
+            var messaggio = "Errore durante la registrazione.";
+
+            if (successo)
+              messaggio = "Sei stato registrato.";
+
+            res.json({
+              success: successo,
+              message: messaggio
+            });
+          });
+        else
+          res.json({
+            success: false,
+            message: 'Nome utente già in uso.'
+          });
+      else
+        res.json({
+          success: false,
+          message: 'Riscontrati problemi con il database.'
+        });
     });
   }
 });
@@ -146,7 +164,7 @@ apiRoutes.post('/uploadScreen', multipartyMiddleware, verifyToken, DataStoreCont
         var screen = {
           id_utente: result.id,
           titolo: req.body.titolo,
-          commento: req.body.commento,
+          commento: req.body.descrizione,
           data: today,
           name: req.name
         };
