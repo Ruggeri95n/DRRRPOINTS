@@ -1,5 +1,5 @@
 // create the module
-var indexApp = angular.module('pointApp', ['ngRoute', 'ngStorage']);
+var indexApp = angular.module('pointApp', ['ngRoute', 'ngStorage', 'ngFileUpload']);
 
 //  Aggiunta della variabile e funzione globali per nascondere/mostrare il menù
 indexApp.run(function ($rootScope) {
@@ -39,7 +39,8 @@ var curToken = { value: "", enable: false };
 // create the controller and inject Angular's $scope
 indexApp.controller('homeController', function ($scope, $http) {
     $scope.message = "Home Page";
-    $scope.Users = [{ pic: '' }, { pic: '' }, { pic: '' }, { pic: '' }];
+    $scope.Users = [];
+    $scope.Users[0] = [{ pic: '' }, { pic: '' }, { pic: '' }, { pic: '' }];
     $scope.page = 1;
 
     $scope.next = function () {
@@ -68,7 +69,6 @@ indexApp.controller('homeController', function ($scope, $http) {
     }).then(function (response) {
         if (response.data.success) {
             $scope.allUsers = response.data.users;
-
             visualizza($scope.page, $scope.allUsers);
         }
     });
@@ -182,15 +182,18 @@ indexApp.controller("gestisciSingup", function ($scope, $http, $location) {
     }
 });
 
-indexApp.controller("gestisciScreen", function ($scope, $http, $window) {
+indexApp.controller("gestisciScreen", function ($scope, $http, $window, Upload) {
     $scope.message = "Area Screen";
     $scope.page = 1;
     $scope.notLogin = true;
+    $scope.orderBy = 'numero';
+    $scope.orderValue = 1;
 
     var parametri = {
         token: curToken.value,
-        start: 0,
-        end: 50
+        end: 50,
+        orderBy: $scope.orderBy,
+        orderValue: $scope.orderValue
     };
 
     $http({
@@ -202,10 +205,11 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window) {
         if (response.data.success) {
             $scope.notLogin = false;
             $scope.allScreen = response.data.post;
+
             visualizza($scope.page, $scope.allScreen);
         }
         else
-            alert(response.data.message)
+            alert(response.data.message);
     }, function (errore) {
         $scope.notLogin = true;
     });
@@ -227,6 +231,30 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window) {
         }
 
         $scope.Foto = app;
+    };
+
+    var chiediScreen = function () {
+        $http({
+            method: "POST",
+            url: "http://localhost:3001/api/getScreen",
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                token: curToken.value,
+                end: (($scope.page + 1) * 10) + 50,
+                orderBy: $scope.orderBy,
+                orderValue: $scope.orderValue
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                $scope.allScreen = response.data.post;
+                visualizza($scope.page, $scope.allScreen);
+            }
+            else
+                alert(response.data.message);
+        }, function (errore) {
+            //$scope.notLogin = true;
+            alert('Errore!');
+        });
     };
 
     $scope.plusOne = function (index) {
@@ -277,11 +305,15 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window) {
         if (($scope.allScreen.length % 10) > 0)
             extra = 1;
 
-        if ($scope.page + 1 <= ($scope.allScreen.length / 10) + extra)
-        {
+        if ($scope.page + 1 <= ($scope.allScreen.length / 10) + extra) {
             $scope.page++;
             visualizza($scope.page, $scope.allScreen);
             $window.scrollTo(0, 0);
+        }
+        else
+        {
+            $scope.page++;
+            chiediScreen();
         }
     };
 
@@ -291,5 +323,62 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window) {
             visualizza($scope.page, $scope.allScreen);
             $window.scrollTo(0, 0);
         }
+    };
+
+    $scope.sendScreen = function () {
+        Upload.upload({
+            url: 'http://localhost:3001/api/uploadScreen',
+            method: 'POST',
+            data: {
+                titolo: $scope.titolo,
+                descrizione: $scope.descrizione,
+                token: curToken.value
+            },
+            file: $scope.file
+        }).then(function (response) {
+            if (response.data.success) {
+                alert(response.data.message);
+                var modal = $('#ScreenModal');
+                modal.modal('hide');
+            }
+            else
+                $scope.fileError = response.data.message || "Errore! File non inviato correttamente.";
+        });
+    };
+
+    $scope.recentiPiu = function () {
+        $scope.page = 1;
+        $scope.orderBy = 'numero';
+        $scope.orderValue = '1';
+        $scope.allScreen = [];
+        $window.scrollTo(0, 0);
+        chiediScreen();
+    };
+
+    $scope.recentiMeno = function () {
+        $scope.page = 1;
+        $scope.orderBy = 'numero';
+        $scope.orderValue = '0';
+        $scope.allScreen = [];
+        $window.scrollTo(0, 0);
+        chiediScreen();
+    };
+
+    $scope.votatiPiu = function () {
+        $scope.page = 1;
+        $scope.orderBy = 'n_like';
+        $scope.orderValue = '1';
+        $scope.allScreen = [];
+        $window.scrollTo(0, 0);
+        chiediScreen();
+    };
+
+    $scope.votatiMeno = function () {
+        $scope.page = 1;
+        $scope.orderBy = 'n_dislike';
+        $scope.orderValue = '1';
+        $scope.allScreen = [];
+        $window.scrollTo(0, 0);
+        chiediScreen();
     };
 });

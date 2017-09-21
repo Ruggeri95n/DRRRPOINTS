@@ -1,21 +1,26 @@
-// ============================
-// = get the packages we need =
-// ============================
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
+var fs = require('fs');
 var database = require('./app/database');
 
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var jwt = require('jsonwebtoken');
 var user = require('./app/models/utenti');
 
-// =======================
-// ==== configuration ====
-// =======================
-var port = 3001 || process.env.PORT; // used to create, sign, and verify tokens
+// Requires multiparty 
+var multiparty = require('connect-multiparty');
+var multipartyMiddleware = multiparty();
 
-app.set('superSecret', '453ilgb34ig34g9gh4'); // secret variable (prelevata da config.js)
+// Requires data store
+var DataStoreController = require('./dataStore');
+
+
+
+// configuration 
+var port = 3001 || process.env.PORT;
+
+app.set('superSecret', '453ilgb34ig34g9gh4');
 
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,7 +37,7 @@ var allowCrossDomain = function (req, res, next) {
 
   //  Vado avanti solo se non è stata richiesta l'opzione dei cors
   if ('OPTIONS' === req.method) {
-    res.send(200);
+    res.sendStatus(200);
   } else {
     next();
   }
@@ -41,13 +46,33 @@ var allowCrossDomain = function (req, res, next) {
 // Abilito i CORS
 app.use(allowCrossDomain);
 
+var verifyToken = function (req, res, next) {
+  var token = req.headers['x-access-token'] || req.body.token || req.query.token; // || req.cookies.authToken;
+
+  if (token) {
+    jwt.verify(token, app.get('superSecret'), function (err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    return res.sendStatus(403).json({
+      success: false,
+      message: 'No token provided.'
+    });
+  }
+};
+
 // =======================
 // routes ================
 // =======================
 
 // basic route (momentaneamente solo di test)
 app.get('/', function (req, res) {
-  res.send('Hey you!');
+  res.sendStatus(200);
 });
 
 //  Restituisce la lista degli utenti con i punteggi associati
@@ -89,23 +114,20 @@ app.post('/singup', function (req, res) {
 });
 
 // API ROUTES -------------------
-
-// get an instance of the router for api routes
 var apiRoutes = express.Router();
 
-// route to authenticate a user
 apiRoutes.post('/authenticate', function (req, res) {
 
   database.findUser(req.body.name, req.body.password, function (ris, messaggio) {
     var token;
 
     if (ris) {
-      // create a token
+
       token = jwt.sign(req.body.name, app.get('superSecret'), {
         expiresInMinutes: 1440
       });
     }
-    // return the information including token as JSON
+
     res.json({
       success: ris,
       message: messaggio,
@@ -114,48 +136,61 @@ apiRoutes.post('/authenticate', function (req, res) {
   });
 });
 
-// route middleware to verify a token
-apiRoutes.use(function (req, res, next) {
+apiRoutes.post('/uploadScreen', multipartyMiddleware, verifyToken, DataStoreController.uploadFile, function (req, res) {
+  if (req.success) {
+    database.getUserId(req.decoded, function (ris, message, result) {
+      if (ris) {
+        var date = new Date();
+        var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
-  // check header or url parameters or post parameters or cookie 
-  var token = req.headers['x-access-token'] || req.body.token || req.query.token; // || req.cookies.authToken;
-
-  // decode token
-  if (token) {
-
-    // verifies secret and checks exp (controllo che non sia tarocco)
-    jwt.verify(token, app.get('superSecret'), function (err, decoded) {
-      if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });
-      } else {
-        // if everything is good, save to request for use in other routes
-        req.decoded = decoded;
-        next();
+        var screen = {
+          id_utente: result.id,
+          titolo: req.body.titolo,
+          commento: req.body.commento,
+          data: today,
+          name: req.name
+        };
+        database.addScreen(screen, function (ris, message) {
+          res.json({
+            success: ris,
+            message: message
+          });
+        });
       }
-    });
-
-  } else {
-    // if there is no token
-    // return an error
-    return res.status(403).send({
-      success: false,
-      message: 'No token provided.'
+      else
+        res.json({
+          success: ris,
+          message: message
+        });
     });
   }
+  else
+    res.json({
+      success: false,
+      message: 'Errore sconosciuto.'
+    });
 });
 
-// route to show a random message
-apiRoutes.post('/', function (req, res) {
-  res.json({
-    message: 'Hey You.'
-  });
+apiRoutes.get('/', function (req, res) {
+  res.sendStatus(200);
 });
+
+apiRoutes.use(verifyToken);
 
 apiRoutes.post('/getScreen', function (req, res) {
-  var start = req.body.start || 0;
   var end = req.body.end || 50;
+  var orderBy = req.body.orderBy || "numero";
+  var orderValue = req.body.orderValue || 1;
 
-  database.findPost(start, end, function (ris, message, result) {
+  if (!(orderBy === "numero" || orderBy === "n_like" || orderBy === "n_dislike")) {
+    res.json({
+      success: false,
+      message: 'Parametro di ordinamento errato.'
+    });
+    return;
+  }
+
+  database.findPost(end, orderBy, orderValue, function (ris, message, result) {
     res.json({
       success: ris,
       message: message,
@@ -226,8 +261,5 @@ apiRoutes.post('/votaScreen', function (req, res) {
 
 app.use('/api', apiRoutes);
 
-// =======================
-// start the server ======
-// =======================
 app.listen(port);
 console.log('Node è in funzione su http://localhost:' + port);

@@ -93,7 +93,7 @@ exports.getUserId = function (username, callback) {
   });
 };
 
-exports.findPost = function (start, end, callback) {
+exports.findPost = function (end, order, orV, callback) {
   var con = mysql.createConnection(config);
 
   con.connect(function (err) {
@@ -103,7 +103,19 @@ exports.findPost = function (start, end, callback) {
       throw err;
     }
 
-    con.query("SELECT * FROM info_screen WHERE numero >= " + start + " LIMIT " + (start + end) + ";",
+    var par;
+
+    if (orV == 1)
+      par = 'DESC';
+    else
+      if (orV == 0)
+        par = 'ASC';
+      else {
+        callback(false, "Valore di ordinamento errato.");
+        return;
+      }
+
+    con.query("SELECT * FROM info_screen ORDER BY " + order + " " + par + " LIMIT " + end + ";",
       function (err, result) {
         if (err) {
           callback(false, "Errore di connessione alla tabella degli utenti.");
@@ -115,7 +127,7 @@ exports.findPost = function (start, end, callback) {
             callback(true, 'Operazione riuscita.', result);
           }
           else {
-            callback(false, "Utente non trovato.");
+            callback(false, "Non ci sono screen.");
           }
           con.end();
         }
@@ -231,5 +243,65 @@ exports.eliminaVoto = function (id_screen, id_user, callback) {
         callback(true);
       }
     });
+  });
+};
+
+exports.addScreen = function (screen, callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false, 'Riscontrati problemi con il database.');
+      con.end();
+      throw err;
+    }
+
+    var sql = "INSERT INTO screen (id_utente, titolo, commento, data, name) VALUES ?";
+    var values = [
+      [screen.id_utente, screen.titolo, screen.commento, screen.data, screen.name],
+    ];
+
+    con.query(sql, [values], function (err, result) {
+      if (err) {
+        callback(false, 'Riscontrati problemi con il database.');
+        con.end();
+        throw err;
+      }
+      else {
+        console.log(" <--- screen aggiunto --->");
+        con.end();
+        callback(true, 'Screen caricato correttamente.');
+      }
+    });
+  });
+};
+
+exports.findScreen = function (nome, callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false, "Errore di connessione al database.");
+      con.end();
+      throw err;
+    }
+
+    con.query("SELECT * FROM screen WHERE name = " + nome + ";",
+      function (err, result) {
+        if (err) {
+          callback(false, "Errore di connessione alla tabella degli screen.");
+          con.end();
+          throw err;
+        }
+        else {
+          if (result.length > 0) {
+            callback(true, "Screen trovato.", result[0]);
+          }
+          else {
+            callback(false, "Screen non trovato.");
+          }
+          con.end();
+        }
+      });
   });
 };

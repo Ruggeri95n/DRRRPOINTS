@@ -7,13 +7,56 @@
     <div class="row">
 
         <div class="col-xs-3 col-md-3">
-            <div ng-hide="notLogin">
-                <ul class="nav nav-pills nav-stacked" style="position: fixed;margin-top: 60px;">
-                    <li class="active"><button type="button" class="btn btn-link">Menù Screen</button></li>
-                    <li><button type="button" class="btn btn-link">opzione 1</button></li>
-                    <li><button type="button" class="btn btn-link">opzione 2</button></li>
-                    <li><button type="button" class="btn btn-link">opzione 3</button></li>
+            <div class="btn-group-vertical" ng-hide="notLogin" style="margin-top: 60px;position:fixed;">
+                <h2><span class="label label-primary">Menù Screen</span></h2>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ScreenModal">Carica screen <span class="glyphicon glyphicon-upload" style="margin-left: 5px;"></span></button>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Ordina per <span class="glyphicon glyphicon-menu-down" style="margin-left: 15px;"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a href ng-click="recentiPiu()">Più recenti</a></li>
+                    <li><a href ng-click="recentiMeno()">Meno recenti</a></li>
+                    <li><a href ng-click="votatiPiu()">Più votati</a></li>
+                    <li><a href ng-click="votatiMeno()">Meno votati</a></li>
                 </ul>
+            </div>
+        </div>
+
+        <!-- ModalScreen -->
+        <div class="modal fade" id="ScreenModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Carica i tuoi zozzi screen</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form ng-app="fileUpload" name="form">
+                            <label>Seleziona screen: <small>si prega di non inserire immagini non inerenti alla chat.</small></label>
+                            <br/>
+                            <button class="btn" data-toggle="tooltip" title="Cliccami tutto" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="4MB">
+                                Scegli file
+                            </button>
+                            <h5>{{file.name}}</h5>
+                            <br/>
+                            <label>Titolo:</label>
+                            <input type="text" class="form-control" name="titolo" ng-model="titolo" placeholder="Titolo dello screen" maxlength="20"
+                                required />
+                            <br/>
+                            <label>Descrizione:</label>
+                            <textarea class="form-control" name="descrizione" ng-model="descrizione" rows="3" placeholder="Inserisci qui un commento o una descrizione..."
+                                maxlength="140" style="resize: none;"></textarea>
+                            <small>Max 140 caratteri.</small>
+                        </form>
+                        <br/>
+                        <p class="text-danger">{{fileError}}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" ng-click="sendScreen()">Invia</button>
+                        <button type="button" data-toggle="tooltip" title="Close me papy" class="btn btn-default" data-dismiss="modal">Annulla</button>
+                    </div>
+                </div>
+
             </div>
         </div>
 

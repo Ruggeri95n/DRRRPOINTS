@@ -16,6 +16,7 @@
   <script src="js/angular-route.min.js"></script>
   <script src="js/storage/ngStorage.js"></script>
   <script src="js/crypto-js/crypto-js.js"></script>
+  <script src="js/ng-file-upload/ng-file-upload.js"></script>
   <script src="js/script.js"></script>
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -25,6 +26,8 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   <style>
+    @import url(https://fonts.googleapis.com/css?family=Montserrat);
+
     .centered {
       text-align: center;
       font-size: 0;
@@ -35,6 +38,54 @@
       display: inline-block;
       text-align: left;
       font-size: 13px;
+    }
+
+    svg {
+      display: block;
+      font: 14.5em 'Montserrat';
+      width: 200px;
+      height: 70px;
+      margin: 0 auto;
+    }
+
+    .text-copy {
+      fill: none;
+      stroke: rgb(0, 0, 0);
+      stroke-dasharray: 6% 29%;
+      stroke-width: 5px;
+      stroke-dashoffset: 0%;
+      animation: stroke-offset 4s infinite linear;
+    }
+
+    .text-copy:nth-child(1) {
+      stroke: #EEEFF3;
+      animation-delay: 0s;
+    }
+
+    .text-copy:nth-child(2) {
+      stroke: #F5F123;
+      animation-delay: -1s;
+    }
+
+    .text-copy:nth-child(3) {
+      stroke: #66FA03;
+      animation-delay: -2s;
+    }
+
+    .text-copy:nth-child(4) {
+      stroke: #09F0DC;
+      animation-delay: -3s;
+    }
+
+    .text-copy:nth-child(5) {
+      stroke: #193AF5;
+      animation-delay: -4s;
+    }
+
+    @keyframes stroke-offset {
+      100% {
+        stroke-dashoffset: -35%;
+      }
     }
   </style>
 </head>
@@ -54,7 +105,22 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <span class="navbar-brand">ImpoPoints</span>
+        <span class="navbar-brand">
+          <svg viewBox="0 0 1600 560">
+            <symbol id="s-text">
+              <text text-anchor="middle" x="45%" y="30%">ImpoPoints</text>
+            </symbol>
+          
+            <g class = "g-ants">
+              <use xlink:href="#s-text" class="text-copy"></use>
+              <use xlink:href="#s-text" class="text-copy"></use>
+              <use xlink:href="#s-text" class="text-copy"></use>
+              <use xlink:href="#s-text" class="text-copy"></use>
+              <use xlink:href="#s-text" class="text-copy"></use>
+            </g>
+          </svg>
+
+        </span>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
@@ -67,7 +133,7 @@
           <li><a href="#!login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right ng-hide" ng-show="logIn">
-          <li><a href="#!logout"  data-toggle="tooltip" title="Non andare via :c"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
+          <li><a href="#!logout" data-toggle="tooltip" title="Non andare via :c"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
         </ul>
       </div>
     </div>
