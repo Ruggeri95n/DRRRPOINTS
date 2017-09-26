@@ -57,7 +57,7 @@ exports.findUser = function (username, password, callback) {
         else {
           if (result.length > 0) {
             console.log(" <--- L'utente " + username + " è loggato --->");
-            callback(true, "Sei loggato.");
+            callback(true, "Sei loggato.", result[0]);
           }
           else {
             console.log(" <--- ATTENZIONE! " + username + " dati di login errati --->");
@@ -79,7 +79,37 @@ exports.getUserId = function (username, callback) {
       throw err;
     }
 
-    con.query("SELECT * FROM utenti WHERE nome = " + username + ";",
+    con.query("SELECT * FROM utenti WHERE nome = '" + username + "';",
+      function (err, result) {
+        if (err) {
+          callback(false, "Errore di connessione alla tabella degli utenti.");
+          con.end();
+          throw err;
+        }
+        else {
+          if (result.length > 0) {
+            callback(true, "Id trovato.", result[0]);
+          }
+          else {
+            callback(false, "Id utente non trovato.");
+          }
+          con.end();
+        }
+      });
+  });
+};
+
+exports.getUserName = function (id, callback) {
+  var con = mysql.createConnection(config);
+
+  con.connect(function (err) {
+    if (err) {
+      callback(false, "Errore di connessione al database.");
+      con.end();
+      throw err;
+    }
+
+    con.query("SELECT * FROM utenti WHERE id = " + id + ";",
       function (err, result) {
         if (err) {
           callback(false, "Errore di connessione alla tabella degli utenti.");
@@ -109,7 +139,7 @@ exports.userIsReg = function (username, callback) {
       throw err;
     }
 
-    con.query("SELECT * FROM utenti WHERE nome = " + username + ";",
+    con.query("SELECT * FROM utenti WHERE nome = '" + username + "';",
       function (err, result) {
         if (err) {
           callback(false);
@@ -320,7 +350,7 @@ exports.findScreen = function (nome, callback) {
       throw err;
     }
 
-    con.query("SELECT * FROM screen WHERE name = " + nome + ";",
+    con.query("SELECT * FROM screen WHERE name = '" + nome + "';",
       function (err, result) {
         if (err) {
           callback(false, "Errore di connessione alla tabella degli screen.");

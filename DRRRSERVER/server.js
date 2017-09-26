@@ -54,8 +54,17 @@ var verifyToken = function (req, res, next) {
       if (err) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
-        req.decoded = decoded;
-        next();
+        database.getUserName(decoded, function (ris, message, result) {
+          if (ris) {
+            req.decoded = result.nome;
+            next();
+          }
+          else
+            res.json({
+              success: false,
+              message: 'Riscontrati problemi con il database.'
+            });
+        });
       }
     });
   } else {
@@ -136,12 +145,11 @@ var apiRoutes = express.Router();
 
 apiRoutes.post('/authenticate', function (req, res) {
 
-  database.findUser(req.body.name, req.body.password, function (ris, messaggio) {
+  database.findUser(req.body.name, req.body.password, function (ris, messaggio, result) {
     var token;
 
     if (ris) {
-
-      token = jwt.sign(req.body.name, app.get('superSecret'), {
+      token = jwt.sign(result.id, app.get('superSecret'), {
         expiresInMinutes: 1440
       });
     }
@@ -279,5 +287,5 @@ apiRoutes.post('/votaScreen', function (req, res) {
 
 app.use('/api', apiRoutes);
 
-app.listen(port);
-console.log('Node è in funzione su http://localhost:' + port);
+app.listen(port, '172.16.0.201');
+console.log('Node è in funzione su http://172.16.0.201:' + port);

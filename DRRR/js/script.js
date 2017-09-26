@@ -1,5 +1,6 @@
 // create the module
 var indexApp = angular.module('pointApp', ['ngRoute', 'ngStorage', 'ngFileUpload', 'ngStorage']);
+var ipserver = "2.226.207.189";
 
 //  Aggiunta della variabile e funzione globali per nascondere/mostrare il menù
 indexApp.run(function ($rootScope) {
@@ -117,7 +118,7 @@ indexApp.controller('homeController', function ($scope, $http, $localStorage) {
 
     $http({
         method: "POST",
-        url: "http://localhost:3001/users",
+        url: "http://"+ipserver+":3001/users",
         headers: { 'Content-Type': 'application/json' }
     }).then(function (response) {
         if (response.data.success) {
@@ -172,7 +173,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $localS
     if (curToken.enable == true) {
         $http({
             method: "POST",
-            url: "http://localhost:3001/api",
+            url: "http://"+ipserver+":3001/api",
             headers: { 'Content-Type': 'application/json' },
             data: { 'token': curToken.value }
         }).then(function (response) {
@@ -207,7 +208,7 @@ indexApp.controller('gestisciLogin', function ($scope, $http, $location, $localS
 
         $http({
             method: "POST",
-            url: "http://localhost:3001/api/authenticate",
+            url: "http://"+ipserver+":3001/api/authenticate",
             headers: { 'Content-Type': 'application/json' },
             data: parametri
         }).then(function (response) {
@@ -249,7 +250,7 @@ indexApp.controller("gestisciSingup", function ($scope, $http, $location, $local
 
         $http({
             method: "POST",
-            url: "http://localhost:3001/singup",
+            url: "http://"+ipserver+":3001/singup",
             headers: { 'Content-Type': 'application/json' },
             data: parametri
         }).then(function (response) {
@@ -290,7 +291,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, $localSt
 
     $http({
         method: "POST",
-        url: "http://localhost:3001/api/getScreen",
+        url: "http://"+ipserver+":3001/api/getScreen",
         headers: { 'Content-Type': 'application/json' },
         data: parametri
     }).then(function (response) {
@@ -328,7 +329,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, $localSt
     var chiediScreen = function (morePag) {
         $http({
             method: "POST",
-            url: "http://localhost:3001/api/getScreen",
+            url: "http://"+ipserver+":3001/api/getScreen",
             headers: { 'Content-Type': 'application/json' },
             data: {
                 token: curToken.value,
@@ -372,7 +373,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, $localSt
 
         $http({
             method: "POST",
-            url: "http://localhost:3001/api/votaScreen",
+            url: "http://"+ipserver+":3001/api/votaScreen",
             headers: { 'Content-Type': 'application/json' },
             data: parametri
         }).then(function (response) {
@@ -393,7 +394,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, $localSt
 
         $http({
             method: "POST",
-            url: "http://localhost:3001/api/votaScreen",
+            url: "http://"+ipserver+":3001/api/votaScreen",
             headers: { 'Content-Type': 'application/json' },
             data: parametri
         }).then(function (response) {
@@ -442,7 +443,7 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, $localSt
         $scope.fileError = "";
 
         Upload.upload({
-            url: 'http://localhost:3001/api/uploadScreen',
+            url: "http://"+ipserver+":3001/api/uploadScreen",
             method: 'POST',
             data: {
                 titolo: $scope.titolo,
@@ -455,6 +456,9 @@ indexApp.controller("gestisciScreen", function ($scope, $http, $window, $localSt
                 alert(response.data.message);
                 var modal = $('#ScreenModal');
                 modal.modal('hide');
+                $scioe.file = null;
+                $scope.titolo = "";
+                $scope.descrizione = "";
                 $scope.recentiPiu();
             }
             else
