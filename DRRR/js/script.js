@@ -1,5 +1,5 @@
 // create the module
-var indexApp = angular.module('pointApp', ['ngRoute', 'ngStorage', 'ngFileUpload', 'ngStorage']);
+var indexApp = angular.module('pointApp', ['ngRoute', 'ngStorage', 'ngFileUpload']);
 var ipserver = "2.226.207.189";
 
 //  Aggiunta della variabile e funzione globali per nascondere/mostrare il menù
