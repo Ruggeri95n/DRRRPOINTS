@@ -16,11 +16,6 @@ var app = express();
 
 app.use('/', express.static('public'));
 
-// your express configuration here
-app.get('/pork', function (req, res) { 
-    res.json('PORK PIE!');
-});
-
 var api = require('./api');
 app.use('/api', api);
 
