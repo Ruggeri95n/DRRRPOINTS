@@ -1,0 +1,32 @@
+{
+  "name": "impopoints",
+  "version": "1.0.0",
+  "description": "Sito per la gestione dei punteggi screen.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "node.js",
+    "express",
+    "https",
+    "angular",
+    "bootstrap"
+  ],
+  "author": "Nicolò Ruggeri",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "connect-multiparty": "^2.0.0",
+    "express": "^4.16.0",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.0.1",
+    "mysql": "^2.14.1"
+  }
+}

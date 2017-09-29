@@ -1,0 +1,6 @@
+node_modules
+public/screen/
+screen.old
+server.key
+server.cer
+server.ca-bundle
