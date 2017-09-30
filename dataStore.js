@@ -1,7 +1,7 @@
 var fs = require('fs');
 FileUploadController = function () { };
 
-var localPath = '/home/work/KRAKEN/DRRR/screen/';
+var localPath = 'public/screen/';
 
 FileUploadController.prototype.uploadFile = function (req, res, next) {
 

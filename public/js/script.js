@@ -1,6 +1,6 @@
 // create the module
 var indexApp = angular.module('pointApp', ['ngRoute', 'ngStorage', 'ngFileUpload']);
-var ipserver = "impo-store.it";
+var ipserver = "www.impo-store.it";
 var protocol = "https";
 
 //  Aggiunta della variabile e funzione globali per nascondere/mostrare il menù
