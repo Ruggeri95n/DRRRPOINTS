@@ -1,6 +1,6 @@
 node_modules
 public/screen/
 screen.old
-server.key
-server.cer
-server.ca-bundle
+impo-store.it_ssl_certificate_INTERMEDIATE.cer
+www.impo-store.it_private_key.key
+www.impo-store.it_ssl_certificate.cer
